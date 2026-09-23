@@ -6,3 +6,4 @@ export * from "./date.js";
 export * from "./vowels.js";
 export * from "./profile-name.js";
 export * from "./basic-date.js";
+export * from "./composite.js";
