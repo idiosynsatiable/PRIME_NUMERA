@@ -12,3 +12,4 @@ export * from "./collision.js";
 export * from "./name-diff.js";
 export * from "./periods.js";
 export * from "./name-structure.js";
+export * from "./frequencies.js";
