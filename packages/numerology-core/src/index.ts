@@ -14,3 +14,4 @@ export * from "./periods.js";
 export * from "./name-structure.js";
 export * from "./frequencies.js";
 export * from "./karmic-debt.js";
+export * from "./compatibility.js";
