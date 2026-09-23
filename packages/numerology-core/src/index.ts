@@ -8,3 +8,4 @@ export * from "./profile-name.js";
 export * from "./basic-date.js";
 export * from "./composite.js";
 export * from "./number-dna.js";
+export * from "./collision.js";
