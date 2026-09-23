@@ -5,3 +5,4 @@ export * from "./name.js";
 export * from "./date.js";
 export * from "./vowels.js";
 export * from "./profile-name.js";
+export * from "./basic-date.js";
