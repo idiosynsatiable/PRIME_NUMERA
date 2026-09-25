@@ -1,6 +1,6 @@
 # Implementation Status
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ## Implemented in foundation branch
 
@@ -16,15 +16,20 @@ Last updated: 2026-09-23
 - Cornerstone, Capstone, and First Vowel
 - name value frequencies, missing-value candidates, Hidden Passion candidates, and Subconscious Self count
 - Karmic Debt occurrence detection with source tracking
+- Rational Thought arithmetic primitive
 - Name Lab arithmetic diff
 - multidimensional compatibility comparison without a fake percentage
 - renderer-independent Number DNA graph contract and integrity validation
 - deterministic collision/repetition primitive without rarity claims
-- initial unit-test source for the above areas
+- unit-test source for the above areas
 - CI workflow source, architecture, privacy, accessibility, threat-model, analytics, SEO, historical-source, design, and release documentation
+
+## Verified
+
+PR #2 triggered GitHub Actions CI run 36079141277. Dependency installation, TypeScript typecheck, and the test suite completed successfully.
 
 ## Not yet verified complete
 
-CI has not yet been observed green on a pull request. The package has not been represented as release-ready. The remaining requested numerology catalog includes Balance, Planes of Expression, Pinnacles, Challenges, Period Cycles, Essence Cycles, Transits, Rational Thought and additional methodology-specific bridge/debt rules. Published reference fixtures and source research are also outstanding.
+The package is not represented as release-ready. The remaining requested numerology catalog includes Balance, Planes of Expression, Pinnacles, Challenges, Period Cycles, Essence Cycles, Transits, and additional methodology-specific bridge/debt rules. Published reference fixtures and source research are also outstanding.
 
 Phase 1 visual concepts remain an approval gate before final interface implementation.
