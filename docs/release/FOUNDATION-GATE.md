@@ -10,11 +10,11 @@ A checked item means evidence exists. Unchecked items are not complete.
 - [x] Expression calculation exposes derivation data.
 - [x] Initial unit-test source added.
 - [x] CI workflow source added.
-- [ ] CI execution verified green.
+- [x] CI execution verified green on PR #2, run 36079141277.
 - [ ] Published-reference fixtures reviewed and cited.
 - [ ] Full requested calculation catalog implemented.
 - [ ] Unicode/non-Latin behavior finalized and tested.
-- [ ] Y/vowel policy implemented and documented.
+- [x] Y/vowel policy implemented and documented.
 - [ ] Historical-source corpus reviewed.
 - [ ] Phase 1 design concepts approved.
 - [ ] Mobile/browser visual verification.
