@@ -23,7 +23,7 @@ export interface LifePathResult {
   readonly value: number;
 }
 
-function assertValidDate(input: BirthDateInput): void {
+export function assertValidBirthDate(input: BirthDateInput): void {
   const { year, month, day } = input;
   if (!Number.isInteger(year) || !Number.isInteger(month) || !Number.isInteger(day)) {
     throw new RangeError("Birth date components must be integers.");
@@ -47,7 +47,7 @@ export function calculateLifePath(
   strategy: LifePathStrategy,
   policy: ReductionPolicy,
 ): LifePathResult {
-  assertValidDate(input);
+  assertValidBirthDate(input);
 
   if (strategy === "reduce-components") {
     const componentReductions = {
