@@ -24,7 +24,7 @@ describe("advanced catalog primitives", () => {
     const result = calculatePlanesOfExpression("Ada Lovelace", PYTHAGOREAN);
     expect(result.map(({ plane }) => plane)).toEqual(["physical", "mental", "emotional", "intuitive"]);
     expect(result.reduce((sum, plane) => sum + plane.count, 0)).toBe("ADALOVELACE".length);
-    expect(result.find(({ plane }) => plane === "physical")?.matchedLetters).toEqual(["D", "E"]);
+    expect(result.find(({ plane }) => plane === "physical")?.matchedLetters).toEqual(["D", "E", "E"]);
     expect(result.find(({ plane }) => plane === "mental")?.matchedLetters).toEqual(["A", "A", "L", "L", "A"]);
   });
 });
