@@ -11,14 +11,22 @@ export interface BalanceResult {
   readonly value: number;
 }
 
+export const BALANCE_REDUCTION_POLICY: ReductionPolicy = Object.freeze({
+  preserveMasterNumbers: [],
+});
+
 export function calculateBalance(
   fullName: string,
   system: NumerologySystem,
-  policy: ReductionPolicy = system.reductionPolicy,
+  policy: ReductionPolicy = BALANCE_REDUCTION_POLICY,
 ): BalanceResult {
   const words = fullName.trim().split(/\s+/u).filter(Boolean);
-  const initials = words.map((word) => normalizeLatinName(word).normalized[0]).filter((value): value is string => Boolean(value));
-  if (initials.length === 0) throw new RangeError("Name must contain at least one supported Latin initial.");
+  const initials = words
+    .map((word) => normalizeLatinName(word).normalized[0])
+    .filter((value): value is string => Boolean(value));
+  if (initials.length === 0) {
+    throw new RangeError("Name must contain at least one supported Latin initial.");
+  }
   const values = initials.map((letter) => {
     const value = system.mappings[letter];
     if (value === undefined) throw new Error(`No ${system.id} mapping for ${letter}.`);
