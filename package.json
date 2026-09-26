@@ -4,8 +4,8 @@
   "private": true,
   "description": "Transparent numerology and symbolic-systems platform",
   "scripts": {
-    "test": "npm --workspace @prime-numera/numerology-core test",
-    "typecheck": "npm --workspace @prime-numera/numerology-core run typecheck",
+    "test": "npm run test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
     "audit": "npm audit --audit-level=high"
   },
   "workspaces": [
