@@ -12,15 +12,21 @@ export interface RationalThoughtResult {
   readonly value: number;
 }
 
+export const RATIONAL_THOUGHT_REDUCTION_POLICY: ReductionPolicy = Object.freeze({
+  preserveMasterNumbers: [],
+});
+
 export function calculateRationalThought(
   firstName: string,
   birthDay: number,
   system: NumerologySystem,
-  policy: ReductionPolicy,
+  policy: ReductionPolicy = RATIONAL_THOUGHT_REDUCTION_POLICY,
 ): RationalThoughtResult {
   const normalized = normalizeLatinName(firstName).normalized;
   if (!normalized) throw new RangeError("First name must contain a supported Latin letter.");
-  if (!Number.isInteger(birthDay) || birthDay < 1 || birthDay > 31) throw new RangeError("Birth day must be 1-31.");
+  if (!Number.isInteger(birthDay) || birthDay < 1 || birthDay > 31) {
+    throw new RangeError("Birth day must be 1-31.");
+  }
   const firstNameRawValue = [...normalized].reduce((sum, letter) => {
     const value = system.mappings[letter];
     if (value === undefined) throw new Error(`No ${system.id} mapping for ${letter}.`);
