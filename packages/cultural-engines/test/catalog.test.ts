@@ -24,7 +24,7 @@ describe("cultural atlas foundation", () => {
     )!;
     expect(maya.kinds).toContain("calendar");
     expect(maya.kinds).toContain("calendar-mathematics");
-    expect(maya.communities).toContain("Maya peoples");
+    expect("communities" in maya && maya.communities.includes("Maya peoples")).toBe(true);
   });
 
   it("requires cautions that prevent cultural flattening", () => {
