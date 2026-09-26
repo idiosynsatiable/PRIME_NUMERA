@@ -23,3 +23,4 @@ export * from "./transits.js";
 export * from "./personal-calendar.js";
 export * from "./component-name.js";
 export * from "./long-term-timeline.js";
+export * from "./profile.js";
