@@ -19,15 +19,15 @@ export interface PlanesMethodology {
   readonly definitions: readonly PlaneDefinition[];
 }
 
-export const FOUNDATION_PLANES_METHODOLOGY: PlanesMethodology = Object.freeze({
+export const FOUNDATION_PLANES_METHODOLOGY = Object.freeze({
   id: "western-planes-configurable-v1",
   definitions: [
     { plane: "physical", values: [4, 5] },
     { plane: "mental", values: [1, 8] },
     { plane: "emotional", values: [2, 3, 6] },
     { plane: "intuitive", values: [7, 9] },
-  ],
-});
+  ] as const,
+} satisfies PlanesMethodology);
 
 export function calculatePlanesOfExpression(
   input: string,
