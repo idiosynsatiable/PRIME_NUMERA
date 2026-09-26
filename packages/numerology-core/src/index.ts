@@ -17,3 +17,5 @@ export * from "./karmic-debt.js";
 export * from "./compatibility.js";
 export * from "./rational-thought.js";
 export * from "./cycles.js";
+export * from "./balance.js";
+export * from "./planes.js";
