@@ -5,13 +5,14 @@
   "description": "Transparent numerology and symbolic-systems platform",
   "scripts": {
     "test": "npm --workspace @prime-numera/numerology-core test",
-    "typecheck": "npm --workspace @prime-numera/numerology-core run typecheck"
+    "typecheck": "npm --workspace @prime-numera/numerology-core run typecheck",
+    "audit": "npm audit --audit-level=high"
   },
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "engines": {
-    "node": ">=20"
+    "node": ">=24"
   }
 }

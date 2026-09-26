@@ -41,10 +41,45 @@ export interface NameCalculationResult {
   readonly value: number;
 }
 
+export interface NormalizationPolicy {
+  readonly id: string;
+  readonly unicodeForm: "NFKD";
+  readonly supportedScript: "latin";
+  readonly transliteration: "none";
+  readonly separators: readonly string[];
+  readonly unsupportedCharacters: "report";
+}
+
+export type SupportedSystemCalculation =
+  | "expression"
+  | "soul-urge"
+  | "personality"
+  | "name-frequency"
+  | "name-diff"
+  | "balance"
+  | "rational-thought"
+  | "planes-of-expression"
+  | "transits"
+  | "essence";
+
+export interface NumerologyCitation {
+  readonly title: string;
+  readonly url: string;
+  readonly classification:
+    | "modern-methodology"
+    | "bibliographic-primary"
+    | "historical-secondary";
+  readonly note?: string;
+}
+
 export interface NumerologySystem {
   readonly id: NumerologySystemId;
   readonly name: string;
   readonly historicalContext: string;
   readonly mappings: Readonly<Record<string, number>>;
+  readonly normalizationPolicy: NormalizationPolicy;
   readonly reductionPolicy: ReductionPolicy;
+  readonly masterNumbers: readonly MasterNumber[];
+  readonly supportedCalculations: readonly SupportedSystemCalculation[];
+  readonly citations: readonly NumerologyCitation[];
 }

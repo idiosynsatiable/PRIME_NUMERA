@@ -48,6 +48,19 @@ describe("system isolation", () => {
     expect(PYTHAGOREAN.mappings.F).toBe(6);
   });
 
+  it("keeps a Chaldean compound total visible while reducing it without Pythagorean master preservation", () => {
+    const result = calculateExpression("AFB", CHALDEAN);
+    expect(result.sum).toBe(11);
+    expect(result.value).toBe(2);
+    expect(CHALDEAN.masterNumbers).toEqual([]);
+  });
+
+  it("exposes system methodology metadata", () => {
+    expect(PYTHAGOREAN.normalizationPolicy.transliteration).toBe("none");
+    expect(PYTHAGOREAN.supportedCalculations).toContain("planes-of-expression");
+    expect(CHALDEAN.supportedCalculations).not.toContain("planes-of-expression");
+  });
+
   it("rejects an empty supported name instead of inventing a result", () => {
     expect(() => calculateExpression("---", PYTHAGOREAN)).toThrow(RangeError);
   });

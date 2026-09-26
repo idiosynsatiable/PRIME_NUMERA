@@ -1,5 +1,5 @@
+import { assertValidBirthDate, type BirthDateInput } from "./date.js";
 import { reduceNumber } from "./reduction.js";
-import type { BirthDateInput } from "./date.js";
 import type { ReductionPolicy, ReductionResult } from "./types.js";
 
 export interface CycleValue {
@@ -52,6 +52,7 @@ export function calculatePinnacles(
   policy: ReductionPolicy,
   methodology: CycleMethodology = FOUNDATION_CYCLE_METHODOLOGY,
 ): readonly CycleValue[] {
+  assertValidBirthDate(input);
   const month = componentReduction(input.month, policy, methodology.preserveMasterNumbersInPinnacles).value;
   const day = componentReduction(input.day, policy, methodology.preserveMasterNumbersInPinnacles).value;
   const year = componentReduction(input.year, policy, methodology.preserveMasterNumbersInPinnacles).value;
@@ -76,6 +77,7 @@ export function calculateChallenges(
   policy: ReductionPolicy,
   methodology: CycleMethodology = FOUNDATION_CYCLE_METHODOLOGY,
 ): readonly ChallengeValue[] {
+  assertValidBirthDate(input);
   const componentPolicy = methodology.challengeComponentsReduceToSingleDigit ? singleDigitPolicy : policy;
   const month = reduceNumber(input.month, componentPolicy).value;
   const day = reduceNumber(input.day, componentPolicy).value;
@@ -97,6 +99,7 @@ export function calculatePeriodCycles(
   policy: ReductionPolicy,
   methodology: CycleMethodology = FOUNDATION_CYCLE_METHODOLOGY,
 ): readonly PeriodCycleValue[] {
+  assertValidBirthDate(input);
   const periodPolicy = methodology.preserveMasterNumbersInPeriods ? policy : singleDigitPolicy;
   const values = [
     [1, "month", input.month],

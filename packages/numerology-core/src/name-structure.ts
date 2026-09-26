@@ -13,13 +13,22 @@ export interface NameStructureResult {
   readonly vowelPolicy: VowelPolicy;
 }
 
-export function calculateNameStructure(
-  input: string,
+function assertSingleFirstNameInput(input: string): void {
+  if (/\s/u.test(input.trim())) {
+    throw new RangeError(
+      "Cornerstone, Capstone, and First Vowel require the first name only, not a full name.",
+    );
+  }
+}
+
+export function calculateFirstNameStructure(
+  firstName: string,
   system: NumerologySystem,
   vowelPolicy: VowelPolicy,
 ): NameStructureResult {
-  const normalizedInput = normalizeLatinName(input).normalized;
-  if (!normalizedInput) throw new RangeError("Name must contain a supported Latin letter.");
+  assertSingleFirstNameInput(firstName);
+  const normalizedInput = normalizeLatinName(firstName).normalized;
+  if (!normalizedInput) throw new RangeError("First name must contain a supported Latin letter.");
   const letters = [...normalizedInput];
   const cornerstone = letters[0]!;
   const capstone = letters[letters.length - 1]!;
@@ -41,3 +50,6 @@ export function calculateNameStructure(
     vowelPolicy,
   };
 }
+
+/** @deprecated Use calculateFirstNameStructure to make the input scope explicit. */
+export const calculateNameStructure = calculateFirstNameStructure;

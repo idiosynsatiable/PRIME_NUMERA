@@ -20,3 +20,6 @@ export * from "./cycles.js";
 export * from "./balance.js";
 export * from "./planes.js";
 export * from "./transits.js";
+export * from "./personal-calendar.js";
+export * from "./component-name.js";
+export * from "./long-term-timeline.js";
