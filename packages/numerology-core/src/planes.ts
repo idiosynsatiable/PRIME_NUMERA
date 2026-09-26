@@ -5,11 +5,14 @@ export type ExpressionPlane = "physical" | "mental" | "emotional" | "intuitive";
 
 export interface PlaneDefinition {
   readonly plane: ExpressionPlane;
-  readonly values: readonly number[];
+  readonly letters: readonly string[];
 }
 
-export interface PlaneResult extends PlaneDefinition {
-  readonly letters: readonly string[];
+export interface PlaneResult {
+  readonly plane: ExpressionPlane;
+  readonly configuredLetters: readonly string[];
+  readonly matchedLetters: readonly string[];
+  readonly mappedValues: readonly number[];
   readonly count: number;
   readonly rawValue: number;
 }
@@ -20,12 +23,12 @@ export interface PlanesMethodology {
 }
 
 export const FOUNDATION_PLANES_METHODOLOGY = Object.freeze({
-  id: "western-planes-configurable-v1",
+  id: "decoz-western-planes-v1",
   definitions: [
-    { plane: "physical", values: [4, 5] },
-    { plane: "mental", values: [1, 8] },
-    { plane: "emotional", values: [2, 3, 6] },
-    { plane: "intuitive", values: [7, 9] },
+    { plane: "physical", letters: ["D", "E", "M", "W"] },
+    { plane: "mental", letters: ["A", "G", "H", "J", "L", "N", "P"] },
+    { plane: "emotional", letters: ["B", "I", "O", "R", "S", "T", "X", "Z"] },
+    { plane: "intuitive", letters: ["C", "F", "K", "Q", "U", "V", "Y"] },
   ] as const,
 } satisfies PlanesMethodology);
 
@@ -36,16 +39,21 @@ export function calculatePlanesOfExpression(
 ): readonly PlaneResult[] {
   const normalized = normalizeLatinName(input).normalized;
   if (!normalized) throw new RangeError("Name must contain a supported Latin letter.");
+
   return methodology.definitions.map((definition) => {
-    const letters = [...normalized].filter((letter) => {
+    const matchedLetters = [...normalized].filter((letter) => definition.letters.includes(letter));
+    const mappedValues = matchedLetters.map((letter) => {
       const value = system.mappings[letter];
-      return value !== undefined && definition.values.includes(value);
+      if (value === undefined) throw new Error(`No ${system.id} mapping for ${letter}.`);
+      return value;
     });
     return {
-      ...definition,
-      letters,
-      count: letters.length,
-      rawValue: letters.reduce((sum, letter) => sum + (system.mappings[letter] ?? 0), 0),
+      plane: definition.plane,
+      configuredLetters: definition.letters,
+      matchedLetters,
+      mappedValues,
+      count: matchedLetters.length,
+      rawValue: mappedValues.reduce((sum, value) => sum + value, 0),
     };
   });
 }
