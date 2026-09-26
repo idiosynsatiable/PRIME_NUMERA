@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { calculateBridgeNumber, calculateMaturityNumber } from "../src/index.js";
+import {
+  calculateBridgeNumber,
+  calculateLifePathExpressionBridge,
+  calculateMaturityNumber,
+  calculateSoulUrgePersonalityBridge,
+} from "../src/index.js";
 
 const policy = { preserveMasterNumbers: [11, 22, 33] as const };
 
@@ -13,5 +18,17 @@ describe("composite calculations", () => {
   it("calculates a bridge as an absolute difference", () => {
     expect(calculateBridgeNumber(8, 6).value).toBe(2);
     expect(calculateBridgeNumber(6, 8).value).toBe(2);
+  });
+
+  it("labels Life Path / Expression Bridge explicitly", () => {
+    const result = calculateLifePathExpressionBridge(1, 4);
+    expect(result.bridgeKind).toBe("life-path-expression");
+    expect(result.value).toBe(3);
+  });
+
+  it("labels Soul Urge / Personality Bridge explicitly", () => {
+    const result = calculateSoulUrgePersonalityBridge(9, 4);
+    expect(result.bridgeKind).toBe("soul-urge-personality");
+    expect(result.value).toBe(5);
   });
 });
