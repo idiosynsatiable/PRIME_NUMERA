@@ -26,3 +26,4 @@ export * from "./long-term-timeline.js";
 export * from "./profile.js";
 export * from "./profile-dna.js";
 export * from "./profile-compatibility.js";
+export * from "./share.js";
