@@ -4,6 +4,7 @@
   "private": true,
   "description": "Transparent numerology and symbolic-systems platform",
   "scripts": {
+    "start": "node server.mjs",
     "test": "npm run test --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "audit": "npm audit --audit-level=high"
