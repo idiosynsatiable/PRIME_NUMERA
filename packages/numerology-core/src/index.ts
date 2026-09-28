@@ -28,3 +28,6 @@ export * from "./profile-dna.js";
 export * from "./profile-compatibility.js";
 export * from "./share.js";
 export * from "./interpretation.js";
+export * from "./product-api.js";
+export * from "./core-content.js";
+export * from "./interpretive-context.js";

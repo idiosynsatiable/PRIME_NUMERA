@@ -1,6 +1,6 @@
 # Phase 1 Design Brief
 
-Status: design direction awaiting visual concept production and handler approval.
+Status: 15 scalable vector screen concepts produced in `docs/design/concepts/`; owner design-direction approval pending. These are concept compositions, not final UI implementation.
 
 ## Experience thesis
 
@@ -34,3 +34,19 @@ Desktop landing, mobile landing, calculator, calculation reveal, Number DNA, dee
 ## Number DNA
 
 The graph must remain information architecture, not particle decoration. Every visual node needs a corresponding accessible structured representation.
+
+## Concept review
+
+The concept set includes desktop and mobile landing, calculator, reveal, Number DNA,
+deep profile, Name Lab, timeline, compatibility, Atlas, Runes Lab, share card,
+Family Mode, 18+ Mode, and account/profile. Each SVG uses a scalable 1080×1920
+mobile or 1920×1080 desktop canvas. The direction uses a dark observatory
+surface, opal/cobalt depth, restrained uranium-green action color, warm-metal
+labels, explicit evidence layers, and privacy controls near the decision point.
+
+Owner review should decide the typography, brightness, motion intensity, and
+whether the visual language feels sufficiently premium. Approval of this
+direction is the gate before building final design tokens/components and Next.js UI.
+
+The SVGs were checked for XML validity. Full visual comparison, contrast,
+screen-reader, and mobile-browser checks remain future UI acceptance gates.

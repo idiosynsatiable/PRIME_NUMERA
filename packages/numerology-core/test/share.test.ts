@@ -87,4 +87,11 @@ describe("public-safe sharing", () => {
       }),
     ).toThrow(RangeError);
   });
+
+  it("rejects extra and malformed runtime fields even when types are bypassed", () => {
+    const payload = createPublicSharePayload(profile, { calculations: ["life-path"], aspectRatio: "1:1" });
+    expect(() => assertPublicSharePayloadSafe({ ...payload, birthDate: "1990-05-15" } as never)).toThrow();
+    expect(() => assertPublicSharePayloadSafe({ ...payload, values: [{ ...payload.values[0], originalInput: "Mary" }] } as never)).toThrow();
+    expect(() => assertPublicSharePayloadSafe({ ...payload, aspectRatio: "bad" } as never)).toThrow();
+  });
 });

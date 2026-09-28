@@ -171,6 +171,35 @@ export function createPublicSharePayload(
 }
 
 export function assertPublicSharePayloadSafe(payload: PublicSharePayload): void {
+  const exactKeys = (value: object, expected: readonly string[]): boolean => {
+    const actual = Object.keys(value).sort();
+    return actual.length === expected.length && actual.every((key, index) => key === [...expected].sort()[index]);
+  };
+  const allowedCalculations: readonly string[] = [
+    "life-path", "expression", "soul-urge", "personality", "birthday",
+    "maturity", "personal-year", "personal-month", "personal-day", "essence",
+  ];
+  if (!payload || typeof payload !== "object" || !exactKeys(payload, ["schemaVersion", "system", "displayLabel", "aspectRatio", "values", "privacy"]) ||
+      payload.schemaVersion !== 1 || payload.system !== "pythagorean" ||
+      !["9:16", "1:1", "4:5", "16:9"].includes(payload.aspectRatio) ||
+      (payload.displayLabel !== null && (typeof payload.displayLabel !== "string" || payload.displayLabel.length > 80)) ||
+      !Array.isArray(payload.values) || payload.values.length < 1 || payload.values.length > 10 ||
+      !payload.privacy || typeof payload.privacy !== "object" ||
+      !exactKeys(payload.privacy, ["containsBirthName", "containsBirthDate", "containsRawInput"])) {
+    throw new TypeError("Invalid public share payload shape.");
+  }
+  const seen = new Set<string>();
+  for (const value of payload.values) {
+    if (!value || typeof value !== "object" ||
+        !exactKeys(value, value.compoundValue === undefined ? ["calculation", "label", "value"] : ["calculation", "label", "value", "compoundValue"]) ||
+        !allowedCalculations.includes(value.calculation) || seen.has(value.calculation) ||
+        typeof value.label !== "string" || value.label.length > 80 ||
+        !Number.isSafeInteger(value.value) || value.value < 0 || value.value > 999 ||
+        (value.compoundValue !== undefined && (!Number.isSafeInteger(value.compoundValue) || value.compoundValue < 0))) {
+      throw new TypeError("Invalid public share value.");
+    }
+    seen.add(value.calculation);
+  }
   const serialized = JSON.stringify(payload);
   const forbiddenKeys = ["birthName", "birthDate", "fullBirthName", "originalInput", "normalizedInput"];
 
