@@ -10,6 +10,7 @@ export interface ShareRecord {
   readonly payload: PublicSharePayload;
   readonly createdAt: string;
   readonly expiresAt: string | null;
+  readonly ownerId?: string;
 }
 
 export interface ShareStore {
@@ -22,6 +23,7 @@ export interface ShareRecordOptions {
   readonly createdAt: string;
   readonly expiresAt?: string | null;
   readonly randomFill?: (bytes: Uint8Array) => void;
+  readonly ownerId?: string;
 }
 
 const SHARE_ID_PATTERN = /^sh_[0-9a-f]{48}$/u;
@@ -80,8 +82,55 @@ export function createShareRecord(
     payload,
     createdAt: options.createdAt,
     expiresAt,
+    ...(options.ownerId === undefined ? {} : { ownerId: options.ownerId }),
   };
 }
+
+export interface ShareClock {
+  now(): string;
+}
+
+export async function resolveShare(
+  store: ShareStore,
+  idInput: string,
+  clock: ShareClock,
+  requesterId?: string,
+): Promise<ShareRecord | null> {
+  assertOpaqueShareId(idInput);
+  const record = await store.get(idInput);
+  if (!record) return null;
+  assertShareRecordSafe(record);
+  if (record.expiresAt !== null && Date.parse(record.expiresAt) <= parseTimestamp(clock.now(), "now")) {
+    await store.delete(idInput);
+    return null;
+  }
+  if (record.ownerId !== undefined && record.ownerId !== requesterId) return null;
+  return record;
+}
+
+export async function deleteShare(store: ShareStore, idInput: string, requesterId: string): Promise<boolean> {
+  assertOpaqueShareId(idInput);
+  const record = await store.get(idInput);
+  if (!record || record.ownerId === undefined || record.ownerId !== requesterId) return false;
+  await store.delete(idInput);
+  return true;
+}
+
+/** The same URL can be encoded by a QR renderer or registered as a web deep link. */
+export function buildShareUrl(origin: string, id: OpaqueShareId): string {
+  const url = new URL(origin);
+  if (url.protocol !== "https:" || url.username || url.password || url.search || url.hash || url.pathname !== "/") {
+    throw new RangeError("Share origin must be a bare HTTPS origin.");
+  }
+  return new URL(buildPublicSharePath(id), url).toString();
+}
+
+export const SHARE_CANVAS_SIZES = {
+  "9:16": { width: 1080, height: 1920 },
+  "1:1": { width: 1080, height: 1080 },
+  "4:5": { width: 1080, height: 1350 },
+  "16:9": { width: 1920, height: 1080 },
+} as const;
 
 export function assertShareRecordSafe(record: ShareRecord): void {
   assertOpaqueShareId(record.id);
