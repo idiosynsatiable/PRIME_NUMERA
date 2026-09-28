@@ -1,4 +1,6 @@
-# Continuation status — 2026-09-27
+# Historical continuation status — 2026-09-27
+
+This records the earlier local continuation. Current evidence and remaining work are in `IMPLEMENTATION-STATUS.md`.
 
 ## Implemented locally on feat/privacy-platform-contracts
 

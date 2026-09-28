@@ -23,17 +23,22 @@ export function parseAnalyticsEvent(input: unknown): AnalyticsEvent {
     throw new TypeError("Analytics event must be an object.");
   }
   const record = input as Record<string, unknown>;
+  const prototype = Object.getPrototypeOf(input);
+  const name = Object.getOwnPropertyDescriptor(input, "name");
+  const version = Object.getOwnPropertyDescriptor(input, "schemaVersion");
   if (
-    Object.keys(record).length !== 2 ||
+    (prototype !== Object.prototype && prototype !== null) ||
+    Reflect.ownKeys(record).length !== 2 ||
     !Object.hasOwn(record, "schemaVersion") ||
     !Object.hasOwn(record, "name") ||
-    record.schemaVersion !== 1 ||
-    typeof record.name !== "string" ||
-    !known.has(record.name)
+    !name || !version || !Object.hasOwn(name, "value") || !Object.hasOwn(version, "value") ||
+    version.value !== 1 ||
+    typeof name.value !== "string" ||
+    !known.has(name.value)
   ) {
     throw new TypeError("Analytics event contains an unknown field or event name.");
   }
-  return { schemaVersion: 1, name: record.name as AnalyticsEventName };
+  return Object.freeze({ schemaVersion: 1, name: name.value as AnalyticsEventName });
 }
 
 export function createAnalyticsClient(sink: AnalyticsSink, hasConsent: () => boolean) {

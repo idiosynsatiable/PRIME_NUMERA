@@ -8,3 +8,10 @@ coverage/
 .DS_Store
 playwright-report/
 test-results/
+
+# Local share storage and backups must never enter the public repository.
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite.backup
