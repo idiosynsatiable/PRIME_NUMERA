@@ -1,3 +1,5 @@
+> Historical checkpoint. Current integrated application evidence: [ASTRA-VERIFICATION.md](ASTRA-VERIFICATION.md); initial audit: [ASTRA-COMPLETION-MATRIX.md](ASTRA-COMPLETION-MATRIX.md).
+
 # Implementation status
 
 Updated: 2026-09-27 (America/Chicago). Product state: **CONDITIONAL DELIVERY — engineering continuation; full application incomplete.**

@@ -6,7 +6,11 @@
   "scripts": {
     "test": "npm run test --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
-    "audit": "npm audit --audit-level=high"
+    "audit": "npm audit --audit-level=high",
+    "lint": "eslint .",
+    "build": "npm run build --workspace @prime-numera/web",
+    "start": "node --import tsx apps/web/server/main.ts",
+    "test:e2e": "playwright test -c apps/web/playwright.config.ts"
   },
   "workspaces": [
     "apps/*",
@@ -14,5 +18,12 @@
   ],
   "engines": {
     "node": ">=24"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.11.0",
+    "prettier": "^3.9.9",
+    "tsx": "^4.23.15",
+    "typescript-eslint": "^8.71.0"
   }
 }

@@ -28,3 +28,7 @@ consent predicate returns true. No provider is selected or authorized here.
 Before production instrumentation, specify a retention period, withdrawal behavior,
 and aggregation policy. Never attach calculation inputs in transport wrappers or
 provider defaults, including page URL query strings.
+
+## Web integration (2026-09-29)
+
+The integrated application has no analytics endpoint, sink, SDK or tracker. It emits no analytics events. The closed package is preserved for a future consent-controlled integration; it is not misrepresented as a currently operating analytics service. Local personalization has no network sink.
