@@ -156,7 +156,7 @@ export function createPublicSharePayload(
     return valueFor(profile, calculation);
   });
 
-  return {
+  const payload: PublicSharePayload = {
     schemaVersion: 1,
     system: "pythagorean",
     displayLabel: normalizeDisplayLabel(selection.displayLabel),
@@ -168,23 +168,54 @@ export function createPublicSharePayload(
       containsRawInput: false,
     },
   };
+  assertPublicSharePayloadSafe(payload);
+  return payload;
 }
 
-export function assertPublicSharePayloadSafe(payload: PublicSharePayload): void {
-  const serialized = JSON.stringify(payload);
-  const forbiddenKeys = ["birthName", "birthDate", "fullBirthName", "originalInput", "normalizedInput"];
+export const SHARE_CALCULATION_LABELS: Readonly<Record<ShareCalculation, string>> = {
+  "life-path": "Life Path", expression: "Expression", "soul-urge": "Soul Urge",
+  personality: "Personality", birthday: "Birthday", maturity: "Maturity",
+  "personal-year": "Personal Year", "personal-month": "Personal Month",
+  "personal-day": "Personal Day", essence: "Essence",
+};
 
-  for (const key of forbiddenKeys) {
-    if (serialized.includes(`"${key}"`)) {
-      throw new Error(`Public share payload contains forbidden field: ${key}.`);
-    }
+function exactDataRecord(value: unknown, expected: readonly string[]): value is Record<string, unknown> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const prototype = Object.getPrototypeOf(value);
+  if (prototype !== Object.prototype && prototype !== null) return false;
+  const keys = Reflect.ownKeys(value);
+  return keys.length === expected.length && keys.every(key =>
+    typeof key === "string" && expected.includes(key) &&
+    Object.hasOwn(Object.getOwnPropertyDescriptor(value, key)!, "value"));
+}
+
+export function assertPublicSharePayloadSafe(input: unknown): asserts input is PublicSharePayload {
+  if (!exactDataRecord(input, ["schemaVersion", "system", "displayLabel", "aspectRatio", "values", "privacy"])) {
+    throw new TypeError("Invalid public share payload shape.");
   }
-
+  const payload = input;
   if (
-    payload.privacy.containsBirthName ||
-    payload.privacy.containsBirthDate ||
-    payload.privacy.containsRawInput
-  ) {
-    throw new Error("Public share payload privacy flags are inconsistent with public-safe sharing.");
+      payload.schemaVersion !== 1 || payload.system !== "pythagorean" ||
+      typeof payload.aspectRatio !== "string" || !["9:16", "1:1", "4:5", "16:9"].includes(payload.aspectRatio) ||
+      (payload.displayLabel !== null && (typeof payload.displayLabel !== "string" || payload.displayLabel.length > 80 || /[\u0000-\u001f\u007f]/u.test(payload.displayLabel))) ||
+      !Array.isArray(payload.values) || Object.getPrototypeOf(payload.values) !== Array.prototype ||
+      payload.values.length < 1 || payload.values.length > 10 ||
+      Reflect.ownKeys(payload.values).length !== payload.values.length + 1 ||
+      Array.from({ length: payload.values.length }, (_, index) => index).some(index => !Object.hasOwn(Object.getOwnPropertyDescriptor(payload.values, index) ?? {}, "value")) ||
+      !exactDataRecord(payload.privacy, ["containsBirthName", "containsBirthDate", "containsRawInput"]) ||
+      payload.privacy.containsBirthName !== false || payload.privacy.containsBirthDate !== false || payload.privacy.containsRawInput !== false) {
+    throw new TypeError("Invalid public share payload shape.");
+  }
+  const seen = new Set<string>();
+  for (const value of payload.values) {
+    if (!value || typeof value !== "object" ||
+        !exactDataRecord(value, Object.hasOwn(value, "compoundValue") ? ["calculation", "label", "value", "compoundValue"] : ["calculation", "label", "value"]) ||
+        typeof value.calculation !== "string" || !Object.hasOwn(SHARE_CALCULATION_LABELS, value.calculation) || seen.has(value.calculation) ||
+        value.label !== SHARE_CALCULATION_LABELS[value.calculation as ShareCalculation] ||
+        typeof value.value !== "number" || !Number.isSafeInteger(value.value) || value.value < 0 || value.value > 999 ||
+        (Object.hasOwn(value, "compoundValue") && (typeof value.compoundValue !== "number" || !Number.isSafeInteger(value.compoundValue) || value.compoundValue < 0))) {
+      throw new TypeError("Invalid public share value.");
+    }
+    seen.add(value.calculation);
   }
 }

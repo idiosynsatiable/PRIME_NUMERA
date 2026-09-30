@@ -20,4 +20,11 @@ Initial event vocabulary:
 
 The primary funnel is Landing → Start → Result → Explore → Share → Referred visitor → Referred calculation.
 
-Event schemas, retention, consent behavior, and provider selection remain implementation decisions. No analytics provider is authorized merely by this document.
+`@prime-numera/analytics` defines a closed event vocabulary. Each event has exactly
+`schemaVersion` and `name`; runtime parsing rejects extra fields including raw names,
+birth dates, user IDs, URLs and free text. The client sends only after an explicit
+consent predicate returns true. No provider is selected or authorized here.
+
+Before production instrumentation, specify a retention period, withdrawal behavior,
+and aggregation policy. Never attach calculation inputs in transport wrappers or
+provider defaults, including page URL query strings.
