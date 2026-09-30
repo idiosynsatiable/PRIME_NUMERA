@@ -15,3 +15,6 @@ test-results/
 *.sqlite-wal
 *.sqlite-shm
 *.sqlite.backup
+
+.numera-data/
+.numera-e2e/
