@@ -216,6 +216,7 @@ describe("HTTP privacy and ownership", () => {
       ).toBe(400);
     }
     expect((await request("/api/shares?name=private")).status).toBe(400);
+    expect((await request("/?utm_source=chatgpt.com")).status).toBe(200);
     expect(
       (await request("/api/shares", { method: "POST", headers, body: "{" }))
         .status,
