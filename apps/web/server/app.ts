@@ -157,9 +157,10 @@ export function createApplication(options: ServerOptions) {
     if (secure) res.setHeader("Strict-Transport-Security", "max-age=31536000");
     try {
       const url = new URL(req.url ?? "/", options.origin);
-      if (url.search)
-        throw new HttpError(400, "Query parameters are not accepted.");
       const path = url.pathname;
+      const isSensitiveRoute = path.startsWith("/s/") || path.startsWith("/api/");
+      if (url.search && isSensitiveRoute)
+        throw new HttpError(400, "Query parameters are not accepted.");
       if (path === "/health" && req.method === "GET") {
         db.prepare("SELECT 1").get();
         send(res, 200, { status: "ok" });
