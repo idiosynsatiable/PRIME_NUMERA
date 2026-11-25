@@ -2,6 +2,8 @@ import { useState } from "react";
 import { westernZodiac, chineseZodiac, dateGrid, personalCycles, drawTarot, HEXAGRAMS, randomIndex, HD_TYPES, HD_AUTHORITIES, HD_PROFILES, digitalRoot, castCoins } from "./omega-engine";
 import { type ProfileInput } from "./profile-storage";
 import { analyzeInteger, classifyInteger, generateSequence, numericOverlap, type EvidenceNode } from "./omega-lab";
+import { BirthTimeLab } from "./omega-birth-ui";
+import { GeometryLab } from "./omega-geometry";
 import { ENGINE_REGISTRY } from "./omega-registry";
 import { reflection } from "./reflections";
 import type { PythagoreanProfile } from "@prime-numera/numerology-core";
@@ -41,10 +43,10 @@ export function OmegaStudio({input,profile}:{input:ProfileInput;profile:Pythagor
     <h2>One portrait, many traditions</h2>
     <p>Explore separately calculated patterns and symbolic practices. Interpretations are creative reflection, not evidence of destiny or a prediction.</p>
     <div className="chips" aria-label="Exploration modules">{tabs.map(([id,label])=><button key={id} type="button" aria-pressed={tab===id} onClick={()=>setTab(id!)}>{label}</button>)}</div>
-    {tab==="sky"&&<div className="omega-cards">
+    {tab==="sky"&&<><div className="omega-cards">
       <article><h3>Western zodiac</h3><strong>{sky.sign}</strong><p>{sky.element} · {sky.modality}</p><small>Conventional date ranges, not an astronomical chart. {sky.nearBoundary?"Near a sign boundary; exact birth time and an ephemeris are necessary.":"Moon and rising signs require an ephemeris and additional birth details."}</small></article>
       <article><h3>Chinese zodiac</h3><strong>{lunar?lunar.element+" "+lunar.animal:"Unavailable"}</strong>{lunar&&<p>{lunar.polarity} · lunar year {lunar.lunarYear} · cycle {lunar.cycle}/60</p>}<small>Chinese lunisolar new-year convention using the device's Intl calendar, supported dates 1900–2100. BaZi uses different solar-term boundaries.</small></article>
-    </div>}
+    </div><BirthTimeLab date={input.date}/></>}
     {tab==="numbers"&&<>
       <h3>Personal year, month and day</h3><label>Explore date<input type="date" value={target} onChange={e=>setTarget(e.target.value)}/></label>
       {cycles?<div className="omega-cards">{Object.entries(cycles).map(([key,value])=><article key={key}><h4>Personal {key}</h4><strong>{value}</strong><p>{reflection(value).title}</p></article>)}</div>:<p>Choose a valid date.</p>}
@@ -84,7 +86,7 @@ export function OmegaStudio({input,profile}:{input:ProfileInput;profile:Pythagor
       <h3>INFINITUM · exact integer analysis</h3><label>Integer (up to 100 digits)<input inputMode="numeric" maxLength={100} value={integer} onChange={e=>setInteger(e.target.value)}/></label>
       {analysis?<><div className="omega-cards"><article><h4>Digit sum</h4><strong>{analysis.digitSum}</strong></article><article><h4>Digital root</h4><strong>{analysis.root}</strong></article><article><h4>Palindrome</h4><strong>{analysis.palindrome?"Yes":"No"}</strong></article></div><p>Binary: <code style={{overflowWrap:"anywhere"}}>{analysis.binary}</code></p><p>Hexadecimal: <code style={{overflowWrap:"anywhere"}}>{analysis.hexadecimal}</code></p><div className="omega-cards">{analysis.residues.map(r=><article key={r.modulus}><h4>Modulo {r.modulus}</h4><strong>{r.remainder}</strong></article>)}</div><h4>Digit frequencies</h4><div className="omega-cards">{analysis.counts.map(c=><article key={c.digit}>{c.digit}: {c.count}</article>)}</div>{classification?<p>{Object.entries(classification).map(([k,v])=>k+": "+String(v)).join(" · ")}</p>:<p>Factor classification is available for integers up to one billion.</p>}</>:<p>Enter digits only.</p>}
       <h3>Sequence explorer</h3><label>Sequence<select aria-label="Sequence" value={series} onChange={e=>setSeries(e.target.value as typeof series)}><option value="fibonacci">Fibonacci</option><option value="lucas">Lucas</option><option value="triangular">Triangular</option><option value="square">Square</option></select></label><p style={{overflowWrap:"anywhere"}}>{generateSequence(series,24).join(" · ")}</p>
-      <small>Exact integer arithmetic; no symbolic or physical claims are implied.</small>
+      <small>Exact integer arithmetic; no symbolic or physical claims are implied.</small><GeometryLab/>
     </>}
     {tab==="registry"&&<><h3>Twelve-engine coverage directory</h3><p>These are implementation-scope declarations, not certification or test results.</p><div className="omega-cards">{ENGINE_REGISTRY.map(e=><article key={e.id}><h4>{e.name}</h4><p><strong style={{fontSize:"1rem"}}>{e.stage}</strong></p><p>{e.available}</p><small>Remaining: {e.next}</small></article>)}</div></>}
   </section>;

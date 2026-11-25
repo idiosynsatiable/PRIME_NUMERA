@@ -13,3 +13,6 @@ Previous branch commit f3225ceb: npm install, lint, typecheck, unit tests, and p
  
 ## Next
 Validate corrected CI, independent calendrical/oracle fixtures, astronomical dependency license and historical timezone architecture; introduce explicit birth-time uncertainty; then build exact celestial calculation adapters and reference-tested Human Design. Keep main and production unchanged until acceptance.
+
+## Birth-data and visualization follow-up
+Implemented local IANA timezone candidate resolution with unknown, ambiguous, nonexistent and unique statuses; optional validated latitude/longitude; supported 1900–2100. Browser timezone data is not a fully independently validated historical ephemeris. Geometry lab implements seven-circle construction, golden-angle point arrangements, and adjustable regular polygons. Added DST and coordinate fixtures. No precise birth chart or Android release is claimed.
