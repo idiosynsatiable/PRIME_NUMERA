@@ -21,4 +21,10 @@ test("Omega Studio reveals and switches symbolic modules",async({page})=>{
  await studio.getByLabel("Type",{exact:true}).selectOption("Manifesting Generator");
  await studio.getByRole("button",{name:"Pattern synthesis"}).click();
  await expect(studio).toContainText("Manifesting Generator");
+ await studio.getByRole("button",{name:"Mathematics lab"}).click();
+ await expect(studio).toContainText("INFINITUM");
+ await studio.getByLabel("Integer (up to 100 digits)").fill("28");
+ await expect(studio).toContainText("perfect: true");
+ await studio.getByRole("button",{name:"Engine directory"}).click();
+ await expect(studio.locator(".omega-cards article")).toHaveCount(12);
 });

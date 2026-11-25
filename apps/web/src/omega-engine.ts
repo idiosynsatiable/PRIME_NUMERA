@@ -59,7 +59,7 @@ export function randomIndex(limit:number) {
   return buf[0]!%limit;
 }
 export function drawTarot(count:number, random=randomIndex) {
-  if(![1,3,10].includes(count)) throw new RangeError("Choose a supported spread.");
+  if(![1,3,5,7,10].includes(count)) throw new RangeError("Choose a supported spread.");
   const deck=[...TAROT];
   return Array.from({length:count},()=> {
     const index=random(deck.length);
