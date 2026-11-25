@@ -70,3 +70,23 @@ export function drawTarot(count:number, random=randomIndex) {
 export const HD_TYPES=["Manifestor","Generator","Manifesting Generator","Projector","Reflector"] as const;
 export const HD_AUTHORITIES=["Emotional","Sacral","Splenic","Ego","Self-projected","Mental / environmental","Lunar"] as const;
 export const HD_PROFILES=["1/3","1/4","2/4","2/5","3/5","3/6","4/6","4/1","5/1","5/2","6/2","6/3"] as const;
+
+const TRIGRAMS=[7,3,5,1,6,2,4,0];
+const KING_WEN=[
+ [1,10,13,25,44,6,33,12],[43,58,49,17,28,47,31,45],
+ [14,38,30,21,50,64,56,35],[34,54,55,51,32,40,62,16],
+ [9,61,37,42,57,59,53,20],[5,60,63,3,48,29,39,8],
+ [26,41,22,27,18,4,52,23],[11,19,36,24,46,7,15,2],
+];
+export function hexagramNumber(lines:readonly number[]) {
+  if(lines.length!==6||lines.some(x=>x!==0&&x!==1)) throw new RangeError("Six binary lines are required.");
+  const lower=lines[0]!+2*lines[1]!+4*lines[2]!;
+  const upper=lines[3]!+2*lines[4]!+4*lines[5]!;
+  return KING_WEN[TRIGRAMS.indexOf(upper)]![TRIGRAMS.indexOf(lower)]!;
+}
+export function castCoins(random=randomIndex) {
+  const lines=Array.from({length:6},()=>6+random(2)+random(2)+random(2));
+  const primary=hexagramNumber(lines.map(x=>x%2));
+  const relating=hexagramNumber(lines.map(x=>x===6||x===9?1-x%2:x%2));
+  return {lines,primary,relating,changing:lines.flatMap((x,i)=>x===6||x===9?[i+1]:[])};
+}

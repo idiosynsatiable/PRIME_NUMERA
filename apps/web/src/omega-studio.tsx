@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { westernZodiac, chineseZodiac, dateGrid, personalCycles, drawTarot, HEXAGRAMS, randomIndex, HD_TYPES, HD_AUTHORITIES, HD_PROFILES, digitalRoot } from "./omega-engine";
+import { westernZodiac, chineseZodiac, dateGrid, personalCycles, drawTarot, HEXAGRAMS, randomIndex, HD_TYPES, HD_AUTHORITIES, HD_PROFILES, digitalRoot, castCoins } from "./omega-engine";
 import { type ProfileInput } from "./profile-storage";
 import { reflection } from "./reflections";
 import type { PythagoreanProfile } from "@prime-numera/numerology-core";
@@ -10,6 +10,7 @@ export function OmegaStudio({input,profile}:{input:ProfileInput;profile:Pythagor
   const [spread,setSpread]=useState(3);
   const [cards,setCards]=useState<ReturnType<typeof drawTarot>>([]);
   const [hex,setHex]=useState<number|null>(null);
+  const [cast,setCast]=useState<ReturnType<typeof castCoins>|null>(null);
   const [hdType,setHdType]=useState("");
   const [authority,setAuthority]=useState("");
   const [hdProfile,setHdProfile]=useState("");
@@ -23,7 +24,7 @@ export function OmegaStudio({input,profile}:{input:ProfileInput;profile:Pythagor
   const digits=/^\d{1,15}$/.test(sequence)?digitalRoot(Number(sequence)):null;
   const tabs=[["sky","Zodiac & lunar"],["numbers","Number laboratory"],["tarot","Tarot & I Ching"],["design","Human Design"],["synthesis","Pattern synthesis"]];
   function exportReflection() {
-    const text=JSON.stringify({schemaVersion:1,western:sky,chinese:lunar,personalCycles:cycles,grid,tarot:cards,hexagram:hex===null?null:{number:hex+1,title:HEXAGRAMS[hex]},humanDesign:{source:"user-entered",type:hdType,authority,profile:hdProfile},identity,journal},null,2);
+    const text=JSON.stringify({schemaVersion:1,western:sky,chinese:lunar,personalCycles:cycles,grid,tarot:cards,hexagram:hex===null?null:{number:hex+1,title:HEXAGRAMS[hex]},humanDesign:{source:"user-entered",type:hdType,authority,profile:hdProfile},identity,journal,coinCast:cast},null,2);
     const url=URL.createObjectURL(new Blob([text],{type:"application/json"}));
     const a=document.createElement("a");a.href=url;a.download="numera-omega-private.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
   }
@@ -43,11 +44,20 @@ export function OmegaStudio({input,profile}:{input:ProfileInput;profile:Pythagor
       <h3>Lo Shu-style birth digit grid</h3><div className="omega-grid">{[4,9,2,3,5,7,8,1,6].map(n=><div key={n}><strong>{n}</strong><span>{grid[n-1]!.count} occurrences</span></div>)}</div><p>Counts Gregorian birth-date digits; zero is excluded. This modern adaptation is distinct from the historical magic square.</p>
       <h3>Repeating-number and 3 · 6 · 9 laboratory</h3><label>Number sequence<input inputMode="numeric" value={sequence} maxLength={15} onChange={e=>setSequence(e.target.value)}/></label>{digits!==null&&<p>Digital root: <strong>{digits}</strong> · {digits===0?"Zero":reflection(digits).title} · {digits!==0&&digits%3===0?"Multiple of three":"Not a nonzero multiple of three"}</p>}<small>Digital roots are mathematical; angel-number or Tesla-inspired meanings are symbolic, not physical laws.</small>
       {profile&&<><h3>Additional core dimensions</h3><div className="omega-cards">{[["Attitude",profile.attitude.value],["Balance",profile.balance.value],["Rational thought",profile.rationalThought.value],["Life Path / Expression bridge",profile.bridges.lifePathExpression.value],["Soul Urge / Personality bridge",profile.bridges.soulUrgePersonality.value],["Life Path / Birthday bridge",profile.bridges.lifePathBirthday.value]].map(([label,value])=><article key={label}><h4>{label}</h4><strong>{value}</strong></article>)}</div></>}
+      {profile&&<details><summary>Complete advanced numerology breakdown</summary>
+        <h3>Name frequency and hidden passions</h3><div className="omega-grid">{profile.nameFrequencies.frequencies.map(f=><div key={f.value}><strong>{f.value}</strong><span>{f.count} letters</span></div>)}</div>
+        <dl><dt>Hidden passions</dt><dd>{profile.nameFrequencies.hiddenPassionValues.join(", ")||"None"}</dd><dt>Karmic lessons</dt><dd>{profile.nameFrequencies.karmicLessonValues?.join(", ")||"None"}</dd><dt>Subconscious self</dt><dd>{profile.nameFrequencies.subconsciousSelfValue??"Unavailable"}</dd><dt>Karmic debt calculation stages</dt><dd>{profile.karmicDebts.map(d=>d.value+" ("+d.source+")").join("; ")||"None detected"}</dd><dt>Cornerstone</dt><dd>{profile.specialLetters.cornerstone} · {profile.specialLetters.cornerstoneValue}</dd><dt>Capstone</dt><dd>{profile.specialLetters.capstone} · {profile.specialLetters.capstoneValue}</dd><dt>First vowel</dt><dd>{profile.specialLetters.firstVowel??"None"} · {profile.specialLetters.firstVowelValue??"Not applicable"}</dd></dl>
+        <h3>Planes of expression</h3><div className="omega-cards">{profile.planes.map(p=><article key={p.plane}><h4>{p.plane}</h4><p>{p.count} letters · raw sum {p.rawValue}</p></article>)}</div>
+        <h3>Four challenge numbers</h3><div className="omega-cards">{profile.challenges.map(c=><article key={c.ordinal}><h4>Challenge {c.ordinal}</h4><strong>{c.value}</strong><p>|{c.left} − {c.right}|</p></article>)}</div>
+        <small>Traditional labels are symbolic. They do not establish debt, guilt, ability or personality.</small>
+      </details>}
     </>}
     {tab==="tarot"&&<>
       <h3>78-card tarot studio</h3><label>Spread<select value={spread} onChange={e=>{setSpread(Number(e.target.value));setCards([]);}}><option value={1}>Single reflection</option><option value={3}>Past / present / possibility</option><option value={10}>Ten-position reflection</option></select></label><button type="button" className="primary" onClick={()=>setCards(drawTarot(spread))}>Draw cards</button>
       <div className="omega-cards" aria-live="polite">{cards.map((c,i)=><article key={c.name}><p className="eyebrow">{spread===3?["Past","Present","Possibility"][i]:"Position "+(i+1)} · {c.reversed?"Reversed":"Upright"}</p><h4>{c.name}</h4><p>{c.reversed?"Reconsider ":"Explore "}{c.theme}.</p></article>)}</div>
       <h3>Chinese symbolic oracle · I Ching</h3><p>Explore all 64 hexagram names. This separate uniform draw is not traditional yarrow-stalk or coin divination and is not a Chinese tarot deck.</p><button type="button" onClick={()=>setHex(randomIndex(64))}>Draw a hexagram</button><label>Browse hexagrams<select value={hex===null?"":String(hex)} onChange={e=>setHex(e.target.value===""?null:Number(e.target.value))}><option value="">Choose one</option>{HEXAGRAMS.map((h,i)=><option key={i} value={i}>{i+1}. {h}</option>)}</select></label>{hex!==null&&<article aria-live="polite"><h4>{hex+1}. {HEXAGRAMS[hex]}</h4><p>What does this theme invite you to reconsider today?</p></article>}
+      <h3>Three-coin I Ching casting</h3><p>Six lines are cast from bottom to top. Values 6 and 9 are changing lines; the resulting second hexagram is shown separately.</p><button type="button" onClick={()=>setCast(castCoins())}>Cast six lines</button>
+      {cast&&<div aria-live="polite"><h4>{cast.primary}. {HEXAGRAMS[cast.primary-1]}</h4><div className="omega-hex">{[...cast.lines].reverse().map((n,i)=><div key={i} aria-label={"Line "+(6-i)+": "+n}><span>{n%2?"━━━━━━":"━━  ━━"}</span> {n} {n===6||n===9?"· changing":""}</div>)}</div><p>Changing lines: {cast.changing.join(", ")||"None"}</p><h4>Relating hexagram: {cast.relating}. {HEXAGRAMS[cast.relating-1]}</h4></div>}
     </>}
     {tab==="design"&&<>
       <h3>Human Design chart companion</h3><p>Enter values from a chart you already have. Automatic bodygraph calculation is not implemented; no birth time, chart or type is guessed.</p>

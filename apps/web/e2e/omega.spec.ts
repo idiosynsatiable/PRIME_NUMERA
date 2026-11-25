@@ -1,0 +1,24 @@
+import { test, expect } from "@playwright/test";
+test("Omega Studio reveals and switches symbolic modules",async({page})=>{
+ await page.goto("/");
+ const form=page.locator("#begin form");
+ await form.getByLabel("Birth name",{exact:true}).fill("Ada Lovelace");
+ await form.getByLabel("Birth date",{exact:true}).fill("1993-11-21");
+ await form.getByRole("button",{name:"Reveal my numbers"}).click();
+ const studio=page.locator("#omega");
+ await expect(studio).toContainText("Scorpio");
+ await expect(studio).toContainText("Water Rooster");
+ await studio.getByRole("button",{name:"Number laboratory"}).click();
+ await expect(studio).toContainText("Personal year");
+ await studio.getByText("Complete advanced numerology breakdown").click();
+ await expect(studio).toContainText("Hidden passions");
+ await studio.getByRole("button",{name:"Tarot & I Ching"}).click();
+ await studio.getByRole("button",{name:"Draw cards"}).click();
+ await expect(studio.locator(".omega-cards article")).toHaveCount(3);
+ await studio.getByRole("button",{name:"Cast six lines"}).click();
+ await expect(studio.locator(".omega-hex div")).toHaveCount(6);
+ await studio.getByRole("button",{name:"Human Design",exact:true}).click();
+ await studio.getByLabel("Type",{exact:true}).selectOption("Manifesting Generator");
+ await studio.getByRole("button",{name:"Pattern synthesis"}).click();
+ await expect(studio).toContainText("Manifesting Generator");
+});
