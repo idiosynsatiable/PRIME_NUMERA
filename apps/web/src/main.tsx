@@ -36,6 +36,7 @@ import {
 } from "./experience";
 import { reflection } from "./reflections";
 import { NumberExplorer, Timeline, NameLab } from "./exploration";
+import { OmegaStudio } from "./omega-studio";
 import "./style.css";
 
 const STORAGE = "numera.profiles.v1",
@@ -899,6 +900,7 @@ function App() {
             <p className="micro">Private result for {input.name}</p>
             <nav className="explore-nav" aria-label="Explore this profile">
               <a href="#arcana">Archetypes</a>
+              <a href="#omega">Omega studio</a>
               {profile && (
                 <>
                   <a href="#dna">Number DNA</a>
@@ -980,6 +982,7 @@ function App() {
               Private exports contain your name and birth date. Keep them
               somewhere you trust.
             </p>
+            <OmegaStudio key={input.name + ":" + input.date + ":" + input.system} input={input} profile={profile} />
             <section id="arcana" className="encounter panel">
               <div className="encounter-art">
                 {encounter.card.id === "wayfinder" ? (
