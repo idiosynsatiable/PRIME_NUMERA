@@ -7,9 +7,9 @@ export const ENGINE_REGISTRY = [
  {id:"arcana",name:"ARCANA",stage:"partial",available:"78-card draws, upright/reversed, 1/3/5/7/10 cards",next:"Deck artwork, spreads, birth cards and licensing"},
  {id:"oracle",name:"ORACLE",stage:"partial",available:"64 hexagrams, coin casting, existing cultural Atlas and runes",next:"Independent hexagram fixtures, yarrow and sourced traditions"},
  {id:"resonance",name:"RESONANCE",stage:"partial",available:"Existing Pythagorean comparison",next:"Other chart comparisons and consent controls"},
- {id:"chronos",name:"CHRONOS",stage:"partial",available:"Numerical cycles, existing timeline, personal day/month/year",next:"Celestial calendars and integrated timeline"},
+ {id:"chronos",name:"CHRONOS",stage:"partial",available:"Numerical cycles, existing timeline, personal day/month/year; 13-month fixed calendar and FORTUNA rule explorer",next:"Celestial calendars and integrated timeline"},
  {id:"psyche",name:"PSYCHE",stage:"planned",available:"Optional self-described identity only; no assessment",next:"Licensed or original questionnaires with appropriate validation"},
- {id:"infinitum",name:"INFINITUM",stage:"partial",available:"Digital roots, digit counts, number bases, residues, sequences, bounded integer classification and interactive geometry",next:"Additional geometry and statistical experiments"},
+ {id:"infinitum",name:"INFINITUM",stage:"partial",available:"Digital roots, digit counts, number bases, residues, sequences, bounded integer classification and interactive geometry",next:"Additional geometry and preregistered statistical experiments"},
  {id:"nomen",name:"NOMEN",stage:"partial",available:"Existing name variant comparison",next:"Multilingual generation and constraint search"},
  {id:"omnisynthesis",name:"OMNISYNTHESIS",stage:"partial",available:"Typed evidence nodes, exact numerical overlap and private export",next:"Sourced symbolic edges, contradictions and interactive graph"},
 ] as const satisfies readonly {id:string;name:string;stage:EngineStage;available:string;next:string}[];

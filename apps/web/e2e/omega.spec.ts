@@ -25,6 +25,11 @@ test("Omega Studio reveals and switches symbolic modules",async({page})=>{
  await expect(studio).toContainText("INFINITUM");
  await studio.getByLabel("Integer (up to 100 digits)").fill("28");
  await expect(studio).toContainText("perfect: true");
+ await studio.getByRole("button",{name:"13 × 28 & FORTUNA"}).click();
+ await studio.getByLabel("Gregorian date",{exact:true}).fill("2024-06-17");
+ await expect(studio).toContainText("Leap Day 2024");
+ await studio.getByLabel("Decimal integer",{exact:true}).fill("144");
+ await expect(studio).toContainText("Base twelve: 100");
  await studio.getByRole("button",{name:"Engine directory"}).click();
  await expect(studio.locator(".omega-cards article")).toHaveCount(12);
 });

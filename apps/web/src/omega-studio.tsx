@@ -3,6 +3,7 @@ import { westernZodiac, chineseZodiac, dateGrid, personalCycles, drawTarot, HEXA
 import { type ProfileInput } from "./profile-storage";
 import { analyzeInteger, classifyInteger, generateSequence, numericOverlap, type EvidenceNode } from "./omega-lab";
 import { BirthTimeLab } from "./omega-birth-ui";
+import { CalendarLab } from "./omega-calendar-ui";
 import { GeometryLab } from "./omega-geometry";
 import { ENGINE_REGISTRY } from "./omega-registry";
 import { reflection } from "./reflections";
@@ -32,7 +33,7 @@ export function OmegaStudio({input,profile}:{input:ProfileInput;profile:Pythagor
   const classification=analysis&&BigInt(analysis.canonical)<=1_000_000_000n?classifyInteger(Number(analysis.canonical)):null;
   const nodes:EvidenceNode[]=[...(profile?[["life-path","Life Path",profile.lifePath.value],["expression","Expression / Destiny",profile.expression.value],["soul-urge","Soul Urge",profile.soulUrge.value],["personality","Personality",profile.personality.value],["birthday","Birthday",profile.birthday.value],["maturity","Maturity",profile.maturity.value]].map(([id,label,value])=>({id:String(id),engine:"numera",label:String(label),value:String(value),kind:"calculation" as const,method:"Existing Pythagorean profile"})):[]),{id:"sun",engine:"astra",label:"Conventional Sun sign",value:sky.sign,kind:"calendar-convention",method:"Fixed date ranges"},...(lunar?[{id:"lunar",engine:"dragon",label:"Chinese lunar year",value:lunar.element+" "+lunar.animal,kind:"calendar-convention" as const,method:"Intl Chinese calendar"}]:[]),...(hdType?[{id:"hd",engine:"genesis",label:"Human Design type",value:hdType,kind:"self-report" as const,method:"Manual entry"}]:[])];
   const overlap=numericOverlap(nodes);
-  const tabs=[["sky","Zodiac & lunar"],["numbers","Number laboratory"],["tarot","Tarot & I Ching"],["design","Human Design"],["synthesis","Pattern synthesis"],["math","Mathematics lab"],["registry","Engine directory"]];
+  const tabs=[["sky","Zodiac & lunar"],["numbers","Number laboratory"],["tarot","Tarot & I Ching"],["design","Human Design"],["synthesis","Pattern synthesis"],["math","Mathematics lab"],["calendar","13 × 28 & FORTUNA"],["registry","Engine directory"]];
   function exportReflection() {
     const text=JSON.stringify({schemaVersion:1,western:sky,chinese:lunar,personalCycles:cycles,grid,tarot:cards,hexagram:hex===null?null:{number:hex+1,title:HEXAGRAMS[hex]},humanDesign:{source:"user-entered",type:hdType,authority,profile:hdProfile},identity,journal,coinCast:cast,evidence:nodes,overlap},null,2);
     const url=URL.createObjectURL(new Blob([text],{type:"application/json"}));
@@ -88,6 +89,7 @@ export function OmegaStudio({input,profile}:{input:ProfileInput;profile:Pythagor
       <h3>Sequence explorer</h3><label>Sequence<select aria-label="Sequence" value={series} onChange={e=>setSeries(e.target.value as typeof series)}><option value="fibonacci">Fibonacci</option><option value="lucas">Lucas</option><option value="triangular">Triangular</option><option value="square">Square</option></select></label><p style={{overflowWrap:"anywhere"}}>{generateSequence(series,24).join(" · ")}</p>
       <small>Exact integer arithmetic; no symbolic or physical claims are implied.</small><GeometryLab/>
     </>}
+    {tab==="calendar"&&<CalendarLab birth={input.date} personalNumbers={profile?[...new Set([profile.lifePath.value,profile.expression.value,profile.soulUrge.value,profile.personality.value])]:[]}/>}
     {tab==="registry"&&<><h3>Twelve-engine coverage directory</h3><p>These are implementation-scope declarations, not certification or test results.</p><div className="omega-cards">{ENGINE_REGISTRY.map(e=><article key={e.id}><h4>{e.name}</h4><p><strong style={{fontSize:"1rem"}}>{e.stage}</strong></p><p>{e.available}</p><small>Remaining: {e.next}</small></article>)}</div></>}
   </section>;
 }
