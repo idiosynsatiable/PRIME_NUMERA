@@ -89,7 +89,7 @@ export function OmegaStudio({input,profile}:{input:ProfileInput;profile:Pythagor
       <h3>Sequence explorer</h3><label>Sequence<select aria-label="Sequence" value={series} onChange={e=>setSeries(e.target.value as typeof series)}><option value="fibonacci">Fibonacci</option><option value="lucas">Lucas</option><option value="triangular">Triangular</option><option value="square">Square</option></select></label><p style={{overflowWrap:"anywhere"}}>{generateSequence(series,24).join(" · ")}</p>
       <small>Exact integer arithmetic; no symbolic or physical claims are implied.</small><GeometryLab/>
     </>}
-    {tab==="calendar"&&<CalendarLab birth={input.date} personalNumbers={profile?[...new Set([profile.lifePath.value,profile.expression.value,profile.soulUrge.value,profile.personality.value])]:[]}/>}
+    <div hidden={tab!=="calendar"}><CalendarLab birth={input.date} personalNumbers={profile?[...new Set([profile.lifePath.value,profile.expression.value,profile.soulUrge.value,profile.personality.value])]:[]}/></div>
     {tab==="registry"&&<><h3>Twelve-engine coverage directory</h3><p>These are implementation-scope declarations, not certification or test results.</p><div className="omega-cards">{ENGINE_REGISTRY.map(e=><article key={e.id}><h4>{e.name}</h4><p><strong style={{fontSize:"1rem"}}>{e.stage}</strong></p><p>{e.available}</p><small>Remaining: {e.next}</small></article>)}</div></>}
   </section>;
 }

@@ -55,3 +55,12 @@ export function summarizeObservations(records:readonly Observation[]){
  const mean=(xs:readonly Observation[])=>xs.length?xs.reduce((s,x)=>s+x.rating,0)/xs.length:null;
  return {higherCount:higher.length,lowerCount:lower.length,higherMean:mean(higher),lowerMean:mean(lower)};
 }
+
+export type ResearchPlan={version:string;registeredAt:string;startDate:string;endDate:string;frame:"gregorian"|"fixed";favorites:number[];personalNumbers:number[];threshold:number};
+export function makeResearchPlan(startDate:string,endDate:string,registeredAt:string,frame:"gregorian"|"fixed",favorites:readonly number[],personalNumbers:readonly number[]):ResearchPlan{
+ const start=dateParts(startDate).date.getTime(),end=dateParts(endDate).date.getTime();
+ const registered=new Date(registeredAt);
+ if(!Number.isFinite(registered.getTime())||startDate<=registeredAt.slice(0,10)||end<start||(end-start)/DAY>=366)throw new RangeError("Register a future start and an end within 366 days.");
+ return {version:MODEL_VERSION,registeredAt,startDate,endDate,frame,favorites:[...favorites],personalNumbers:[...personalNumbers],threshold:4};
+}
+export function inStudy(plan:ResearchPlan,date:string,observedOn:string){dateParts(date);dateParts(observedOn);return date>=plan.startDate&&date<=plan.endDate&&date<=observedOn;}
